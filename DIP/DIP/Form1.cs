@@ -7,6 +7,7 @@ namespace DIP
     public partial class Form1 : Form
     {
         Bitmap loaded, processed;
+        Bitmap imgA, imgB, colorgreen;
         ImageProcessing img = new ImageProcessing();        
         public Form1()
         {
@@ -58,6 +59,31 @@ namespace DIP
             pictureBox2.Image = processed;
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            openFileDialog3.ShowDialog();
+        }
+
+        private void openFileDialog2_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            imgB = new Bitmap(openFileDialog2.FileName);
+            pictureBox1.Image = imgB;
+        }
+
+        private void openFileDialog3_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            imgA = new Bitmap(openFileDialog3.FileName);
+            pictureBox2.Image = imgA;
+        }
+
+        private async void button3_Click(object sender, EventArgs e)
+        {
+            imgA = (Bitmap)pictureBox2.Image;
+            imgB = (Bitmap)pictureBox1.Image;
+
+            pictureBox3.Image = await img.Subtract(imgA, imgB);
+        }
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using(SaveFileDialog saveFileDialog = new SaveFileDialog())
@@ -70,6 +96,11 @@ namespace DIP
                     processed.Save(saveFileDialog.FileName);
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            openFileDialog2.ShowDialog();
         }
 
         private async void mirrorToolStripMenuItem_Click(object sender, EventArgs e)

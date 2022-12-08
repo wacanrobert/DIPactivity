@@ -134,7 +134,7 @@ namespace DIP
                     for (int y = 0; y < b.Height; y++)
                     {
                         sample = b.GetPixel(x, y);
-                        histdata[sample.R]++; /
+                        histdata[sample.R]++; 
                     }
                 }
 
@@ -156,6 +156,38 @@ namespace DIP
                 }
                 return bmp;
             });
+        }
+
+        public async Task<Bitmap> Subtract(Bitmap imgA, Bitmap imgB){
+
+            return await Task.Run(() =>
+            {
+                Bitmap processed = new Bitmap(imgB.Width, imgB.Height);
+                Color mygreen = Color.FromArgb(0, 0, 255);
+                int greygreen = (mygreen.R + mygreen.G + mygreen.B) / 3;
+                int threshold = 5;
+
+                for (int x = 0; x < imgB.Width; x++)
+                {
+                    for (int y = 0; y < imgB.Height; y++)
+                    {
+                        Color pixel = imgB.GetPixel(x, y);
+                        Color backpixel = imgA.GetPixel(x, y);
+
+                        int grey = (pixel.R + pixel.G + pixel.B) / 3;
+                        int subtractvalue = Math.Abs(grey - greygreen);
+
+                        if (subtractvalue > threshold)
+                            processed.SetPixel(x, y, pixel);
+                        else
+                            processed.SetPixel(x, y, backpixel);
+                    }
+                }
+                return processed;
+            });
+            
+            
+                
         }
     }
 }
